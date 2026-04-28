@@ -1,0 +1,5 @@
+template:
+  bootstrap: 5
+
+logo: man/figures/hex_match_logo.png
+url: https://github.com/Stifterverband/HEXmatchR

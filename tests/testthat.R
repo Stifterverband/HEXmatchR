@@ -7,8 +7,8 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(HEXmatch)
+library(HEXmatchR)
 
-if (dir.exists("testthat") && length(list.files("testthat", pattern = "^test.*\\.R$")) > 0) {
-  test_check("HEXmatch")
+if (dir.exists("testthat") && length(list.files("testthat", pattern = "^test.*\.R$")) > 0) {
+  test_check("HEXmatchR")
 }

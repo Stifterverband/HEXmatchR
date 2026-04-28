@@ -60,7 +60,7 @@ anderen Entscheidungswerte oder zusaetzlichen Felder auftreten.
 
 Wie Unsicherheit behandelt wird:
 \itemize{
-\item Das Modell gibt eine \code{confidence} im Bereich \link{0, 1} zur eigenen
+\item Das Modell gibt eine \code{confidence} im Bereich [0, 1] zur eigenen
 Entscheidung an.
 \item Ein Fall wird als unsicher fuer Review markiert, wenn
 \code{confidence < review_confidence} oder \code{confidence} fehlt.

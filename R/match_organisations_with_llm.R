@@ -28,7 +28,7 @@
 #'   anderen Entscheidungswerte oder zusaetzlichen Felder auftreten.
 #'
 #' Wie Unsicherheit behandelt wird:
-#' - Das Modell gibt eine `confidence` im Bereich [0, 1] zur eigenen
+#' - Das Modell gibt eine `confidence` im Bereich \[0, 1\] zur eigenen
 #'   Entscheidung an.
 #' - Ein Fall wird als unsicher fuer Review markiert, wenn
 #'   `confidence < review_confidence` oder `confidence` fehlt.

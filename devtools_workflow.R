@@ -16,6 +16,7 @@ usethis::use_version("patch")
 
 # Paket im aktuellen Arbeitsstand laden.
 devtools::load_all()
+devtools::install()
 
 # Roxygen-Dokumentation aktualisieren:
 # - erzeugt/aktualisiert man/*.Rd
@@ -24,19 +25,15 @@ devtools::document()
 
 # Schneller lokaler Check ohne erneutes Dokumentieren und ohne Vignetten/Manual.
 # Vorher devtools::document() ausfuehren, wenn Roxygen-Kommentare geaendert wurden.
-devtools::check(
-  document = FALSE,
-  args = "--no-manual",
-  build_args = "--no-build-vignettes"
-)
+devtools::check()
+pkgdown::build_site()
+# # Source-Package bauen.
+# # Ergebnis ist z. B. HEXmatch_0.5.3.tar.gz im Projektordner.
+# devtools::build()
 
-# Source-Package bauen.
-# Ergebnis ist z. B. HEXmatch_0.5.3.tar.gz im Projektordner.
-devtools::build()
+# # Paket lokal installieren.
+# devtools::install()
 
-# Paket lokal installieren.
-devtools::install()
-
-# Optional: temporaere Check-/Build-Artefakte aufraeumen.
-unlink("HEXmatch.Rcheck", recursive = TRUE, force = TRUE)
-unlink(list.files(pattern = "^HEXmatch_.*[.]tar[.]gz$"), force = TRUE)
+# # Optional: temporaere Check-/Build-Artefakte aufraeumen.
+# unlink("HEXmatch.Rcheck", recursive = TRUE, force = TRUE)
+# unlink(list.files(pattern = "^HEXmatch_.*[.]tar[.]gz$"), force = TRUE)

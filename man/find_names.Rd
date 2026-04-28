@@ -14,6 +14,6 @@ Ein Tibble mit einer Spalte \code{name_gerit}; wird ausgegeben und
 unsichtbar zurückgegeben.
 }
 \description{
-Liest die Spalte \code{HS} aus der GERIT-\code{.rds}-Datei und gibt alle eindeutigen
-Namen alphabetisch sortiert aus.
+Liest die Spalte \code{Hochschul_Name} (oder \code{HS} in alten Dateien) aus der
+GERIT-\code{.rds}-Datei und gibt alle eindeutigen Namen alphabetisch sortiert aus.
 }

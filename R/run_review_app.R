@@ -33,7 +33,7 @@ run_review_app <- function(review_cases, df_gerit, reviewed_by = current_usernam
   decisions_tbl <- tibble::as_tibble(review_cases$decisions)
 
   ui <- shiny::fluidPage(
-    shiny::titlePanel("HEXmatch Review"),
+    shiny::titlePanel("HEXmatchR Review"),
     shiny::sidebarLayout(
       shiny::sidebarPanel(
         shiny::verbatimTextOutput("case_status"),

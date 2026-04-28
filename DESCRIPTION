@@ -1,4 +1,4 @@
-Package: HEXmatch
+Package: HEXmatchR
 Type: Package
 Title: Match University Organisations to GERIT with Tidyverse and Ellmer
 Version: 0.5.3
@@ -11,15 +11,14 @@ Description: Prepares scraped university organisation data, generates GERIT
 License: Stifterverband-intern
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.3
+RoxygenNote: 7.3.3.9000
 Roxygen: list(markdown = TRUE)
 Imports:
     dplyr,
+    curl (>= 6.4.0),
     ellmer,
     httr2,
-    jsonlite,
     purrr,
-    readxl,
     readr,
     stringr,
     tibble,
