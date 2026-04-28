@@ -86,7 +86,16 @@ evaluate_against_goldstandard <- function(
 
   # Liest die Goldstandard-Daten entweder direkt aus einem Data Frame oder
   # aus einer `.rds`-Datei ein und wandelt sie in ein Tibble um.
-  gold_df <- if (is.character(gold_data) && length(gold_data) == 1 && file.exists(gold_data)) {
+  gold_df <- if (is.character(gold_data) && length(gold_data) == 1) {
+    if (!file.exists(gold_data)) {
+      stop(
+        "`gold_data` wurde als Pfad angegeben, aber die Datei existiert nicht: ",
+        gold_data,
+        ".",
+        call. = FALSE
+      )
+    }
+
     tibble::as_tibble(readRDS(gold_data))
   } else {
     tibble::as_tibble(gold_data)
@@ -160,15 +169,15 @@ evaluate_against_goldstandard <- function(
       dplyr::any_of(paste0("Fachgebiet_Gerit_", 1:6)),
       "Faechergruppen",
       dplyr::any_of("Faechergruppen_IDs"),
-      "gerit_cleaned",
+      dplyr::any_of("gerit_cleaned"),
       "LUF_IDs",
       dplyr::any_of("LUF_Namen"),
       "needs_review"
     ) |>
     dplyr::left_join(gold_orgs, by = "organisation") |>
     dplyr::rename(
-      fachgruppe_scrape_orga = .data$gold_faechergruppe,
-      fachgruppe_gerit_orga = .data$Faechergruppen
+      fachgruppe_scrape_orga = "gold_faechergruppe",
+      fachgruppe_gerit_orga = "Faechergruppen"
     ) |>
     dplyr::mutate(
       predicted_luf = normalize_luf_code(.data$LUF_IDs),

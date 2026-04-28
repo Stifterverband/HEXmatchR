@@ -7,8 +7,8 @@
 prepare_gerit_data(name_gerit, gerit_file = "data/GERIT_DESTATIS_data.rds")
 }
 \arguments{
-\item{name_gerit}{Hochschulname genau so, wie er in \code{HS} der GERIT-Datei
-vorkommt.}
+\item{name_gerit}{Hochschulname genau so, wie er in \code{Hochschul_Name} der
+GERIT-Datei vorkommt.}
 
 \item{gerit_file}{Pfad zur GERIT-\code{.rds}-Datei.}
 }
@@ -24,6 +24,7 @@ gefilterten GERIT-Menge eindeutig ist.
 }
 \description{
 Liest die GERIT-Basis aus einer \code{.rds}-Datei, filtert auf die gewünschte
-Hochschule (\code{HS}) und bereitet die Kernfelder für das Matching von
-gescrapten \code{organisation}-Werten gegen GERIT-\code{Einrichtung} vor.
+Hochschule (\code{Hochschul_Name}, ehemals \code{HS}) und bereitet die Kernfelder für
+das Matching von gescrapten \code{organisation}-Werten gegen \code{Gerit_Orga}
+(ehemals \code{Einrichtung}) vor.
 }

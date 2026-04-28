@@ -1,0 +1,24 @@
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/404.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/authors.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/index.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/reference/apply_review_decisions.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/reference/check_mismatches.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/reference/evaluate_against_goldstandard.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/reference/extract_scraped_organisations.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/reference/finalise_matching.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/reference/find_names.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/reference/generate_candidate_matches.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/reference/generate_embedding_candidates.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/reference/import_matching_data.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/reference/index.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/reference/match_organisations_with_llm.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/reference/match_scraped_organisations.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/reference/prepare_gerit_data.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/reference/prepare_review_cases.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/reference/review_matches.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/reference/run_matching_pipeline.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/reference/run_matching_workflow.html</loc></url>
+<url><loc>https://github.com/Stifterverband/HEXmatchR/reference/run_review_app.html</loc></url>
+</urlset>
+

@@ -10,7 +10,7 @@ df_sample <- df_scraped |>
 workflow_result <- run_matching_workflow(
   name_gerit = "Johann Wolfgang Goethe-Universität Frankfurt am Main",
   df_scraped = df_sample,
-  gold_data = "C:/Users/mhu/OneDrive - Stifterverband/Dateiablage - single_universities/Johann_Wolfgang_Goethe-Universitaet_Frankfurt_am_Main/db_data_universitaet_fam.rds",
+  gold_data = "data/db_data_universitaet_fam.rds",
   model = "gpt-4.1-mini",
   top_k = 5,
   embedding_model = "text-embedding-3-large",

@@ -1,0 +1,38 @@
+# Package index
+
+## All functions
+
+- [`apply_review_decisions()`](https://github.com/Stifterverband/HEXmatchR/reference/apply_review_decisions.md)
+  : Review-Ergebnisse in die Match-Tabelle zurückschreiben
+- [`check_mismatches()`](https://github.com/Stifterverband/HEXmatchR/reference/check_mismatches.md)
+  : Falsch gematchte Goldstandard-Fälle anzeigen
+- [`evaluate_against_goldstandard()`](https://github.com/Stifterverband/HEXmatchR/reference/evaluate_against_goldstandard.md)
+  : Matching-Ergebnisse mit einem Goldstandard vergleichen
+- [`extract_scraped_organisations()`](https://github.com/Stifterverband/HEXmatchR/reference/extract_scraped_organisations.md)
+  : Eindeutige Organisationen aus gescrapten Daten extrahieren
+- [`finalise_matching()`](https://github.com/Stifterverband/HEXmatchR/reference/finalise_matching.md)
+  : Matching-Durchlauf abschliessen
+- [`find_names()`](https://github.com/Stifterverband/HEXmatchR/reference/find_names.md)
+  : Verfügbare GERIT-Hochschulnamen auflisten
+- [`generate_candidate_matches()`](https://github.com/Stifterverband/HEXmatchR/reference/generate_candidate_matches.md)
+  : Gerankte GERIT-Kandidaten für gescrapte Organisationen erzeugen
+- [`generate_embedding_candidates()`](https://github.com/Stifterverband/HEXmatchR/reference/generate_embedding_candidates.md)
+  : GERIT-Kandidaten per OpenAI-Embeddings erzeugen
+- [`import_matching_data()`](https://github.com/Stifterverband/HEXmatchR/reference/import_matching_data.md)
+  : Matching-Daten in gescrapte Kursdaten zurückführen
+- [`match_organisations_with_llm()`](https://github.com/Stifterverband/HEXmatchR/reference/match_organisations_with_llm.md)
+  : Fachgebiete per LLM (OpenAI via ellmer) matchen
+- [`match_scraped_organisations()`](https://github.com/Stifterverband/HEXmatchR/reference/match_scraped_organisations.md)
+  : Gescrapte Organisationen mit GERIT-Einrichtungen matchen
+- [`prepare_gerit_data()`](https://github.com/Stifterverband/HEXmatchR/reference/prepare_gerit_data.md)
+  : GERIT-Daten für das Matching vorbereiten
+- [`prepare_review_cases()`](https://github.com/Stifterverband/HEXmatchR/reference/prepare_review_cases.md)
+  : Review-Fälle für die Shiny-Review-App vorbereiten
+- [`review_matches()`](https://github.com/Stifterverband/HEXmatchR/reference/review_matches.md)
+  : Organisationsmatches in einer Shiny-App reviewen
+- [`run_matching_pipeline()`](https://github.com/Stifterverband/HEXmatchR/reference/run_matching_pipeline.md)
+  : Matching-Pipeline von Anfang bis Ende ausführen
+- [`run_matching_workflow()`](https://github.com/Stifterverband/HEXmatchR/reference/run_matching_workflow.md)
+  : Matching, Review und Goldstandard-Evaluation in einem Aufruf
+- [`run_review_app()`](https://github.com/Stifterverband/HEXmatchR/reference/run_review_app.md)
+  : Shiny-Review-App starten

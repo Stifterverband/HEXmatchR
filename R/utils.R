@@ -90,6 +90,32 @@ progress_bar_close <- function(pb) {
   }
 }
 
+#' HTTP-Dependency-Versionen pruefen
+#'
+#' @return `NULL` unsichtbar, wenn die installierte HTTP-Bibliothek passt.
+#' @noRd
+assert_http_dependencies <- function() {
+  if (!requireNamespace("curl", quietly = TRUE)) {
+    stop(
+      "Das Paket `curl` ist nicht installiert. Bitte einmal `install.packages(\"curl\")` ausfuehren.",
+      call. = FALSE
+    )
+  }
+
+  curl_version <- utils::packageVersion("curl")
+  if (curl_version < "6.4.0" || !"curl_modify_url" %in% getNamespaceExports("curl")) {
+    stop(
+      paste0(
+        "Die installierte `curl`-Version (", as.character(curl_version), ") ist zu alt fuer den OpenAI/ellmer-Aufruf. ",
+        "Bitte `curl` aktualisieren, z. B. mit `install.packages(\"curl\")`, und R danach neu starten."
+      ),
+      call. = FALSE
+    )
+  }
+
+  invisible(NULL)
+}
+
 #' Eindeutige, nicht-fehlende Werte zu einer Zeichenkette zusammenführen
 #'
 #' Konvertiert `x` zu Zeichenketten, entfernt `NA` und leere Strings,
@@ -108,25 +134,6 @@ collapse_unique <- function(x, sep = "|") {
     return(NA_character_)
   }
   paste(values, collapse = sep)
-}
-
-#' Pipe-getrennte Zeichenkette in Tokens zerlegen
-#'
-#' Teilt `x` an `|` auf, trimmt Leerzeichen von jedem Teil und verwirft
-#' leere Zeichenketten. Gibt einen leeren Zeichenvektor für fehlende oder
-#' leere Eingaben zurück.
-#'
-#' @param x Eine einzelne Zeichenkette.
-#'
-#' @return Ein Zeichenvektor getrimmter, nicht-leerer Tokens.
-#' @noRd
-split_pipe <- function(x) {
-  if (length(x) == 0 || is.na(x) || identical(x, "")) {
-    return(character())
-  }
-  stringr::str_split(x, "\\|", simplify = FALSE)[[1]] |>
-    stringr::str_trim() |>
-    (\(values) values[values != ""])()
 }
 
 #' Semikolon-getrennte Organisationszeichenkette aufteilen
@@ -193,17 +200,6 @@ normalize_text <- function(x) {
   x <- stringr::str_replace_all(x, "\\bfur\\b", " ")
   x <- stringr::str_replace_all(x, "[^a-z0-9]+", " ")
   stringr::str_squish(x)
-}
-
-#' Vektor in Blöcke fester Größe aufteilen
-#'
-#' @param x Aufzuteilender Vektor.
-#' @param chunk_size Maximale Länge jedes Blocks.
-#'
-#' @return Eine Liste von Vektoren mit je maximal `chunk_size` Elementen.
-#' @noRd
-chunk_vector <- function(x, chunk_size = 100) {
-  split(x, ceiling(seq_along(x) / chunk_size))
 }
 
 #' Embedding-Eingabetext für einen GERIT-Eintrag erstellen
@@ -324,6 +320,8 @@ fetch_openai_embeddings <- function(
     stop("`OPENAI_API_KEY` is not set.", call. = FALSE)
   }
 
+  assert_http_dependencies()
+
   if (length(inputs) == 0) {
     return(list())
   }
@@ -336,7 +334,7 @@ fetch_openai_embeddings <- function(
     dplyr::distinct(.data$model, .data$input, .keep_all = TRUE)
 
   missing_inputs <- setdiff(unique(inputs), cached_tbl$input)
-  batches <- chunk_vector(as.list(missing_inputs), chunk_size = batch_size)
+  batches <- split(as.list(missing_inputs), ceiling(seq_along(missing_inputs) / batch_size))
   pb <- progress_bar_create(length(batches), paste0("Embeddings fuer ", label, "."))
 
   on.exit(progress_bar_close(pb), add = TRUE)
@@ -390,30 +388,6 @@ fetch_openai_embeddings <- function(
   unname(embedding_lookup[inputs])
 }
 
-#' Kosinusähnlichkeit zwischen zwei numerischen Vektoren
-#'
-#' Gibt 0 zurück, wenn einer der Vektoren die Norm 0 hat, um eine Division
-#' durch null zu vermeiden.
-#'
-#' @param x Ein numerischer Vektor.
-#' @param y Ein numerischer Vektor gleicher Länge wie `x`.
-#'
-#' @return Ein Skalar in \eqn{[-1, 1]}.
-#' @noRd
-cosine_similarity <- function(x, y) {
-  x <- as.numeric(unlist(x))
-  y <- as.numeric(unlist(y))
-
-  x_norm <- sqrt(sum(x * x))
-  y_norm <- sqrt(sum(y * y))
-
-  if (x_norm == 0 || y_norm == 0) {
-    return(0)
-  }
-
-  sum(x * y) / (x_norm * y_norm)
-}
-
 #' Kosinusähnlichkeitstabelle zwischen Query und Kandidaten-Embeddings
 #'
 #' @param query_embedding Ein numerischer Vektor (das Query-Embedding).
@@ -424,9 +398,15 @@ cosine_similarity <- function(x, y) {
 #'   `candidate_embeddings`) und `score` (Kosinusähnlichkeit, numerisch).
 #' @noRd
 embedding_similarity_tbl <- function(query_embedding, candidate_embeddings) {
+  qe <- as.numeric(unlist(query_embedding))
+  q_norm <- sqrt(sum(qe^2))
   tibble::tibble(
     row_id = seq_along(candidate_embeddings),
-    score = purrr::map_dbl(candidate_embeddings, \(embedding) cosine_similarity(query_embedding, embedding))
+    score = purrr::map_dbl(candidate_embeddings, \(embedding) {
+      ce <- as.numeric(unlist(embedding))
+      c_norm <- sqrt(sum(ce^2))
+      if (q_norm == 0 || c_norm == 0) 0 else sum(qe * ce) / (q_norm * c_norm)
+    })
   )
 }
 
@@ -551,103 +531,6 @@ generate_ranked_embedding_candidates <- function(
   )
 }
 
-#' Semesterbezeichnungen in Kurzcode umwandeln
-#'
-#' Gibt `"w"` für Zeichenketten, die den Buchstaben `"w"` enthalten
-#' (Wintersemester), und `"s"` für alle anderen zurück.
-#'
-#' @param x Ein Zeichenvektor mit Semesterbezeichnungen.
-#'
-#' @return Ein Zeichenvektor aus `"w"` oder `"s"` Werten, gleiche Länge
-#'   wie `x`.
-#' @noRd
-semester_to_code <- function(x) {
-  x <- as.character(x)
-  x[is.na(x)] <- ""
-  purrr::map_chr(
-    x,
-    \(value) {
-      letters <- stringr::str_split(stringr::str_to_lower(value), "", simplify = TRUE)
-      if ("w" %in% letters) "w" else "s"
-    }
-  )
-}
-
-#' Jüngstes verfügbares Semester in einem Data Frame finden
-#'
-#' Bestimmt den maximalen Wert von `jahr` und den vorherrschenden Semester-
-#' Kurzcode (`"w"` / `"s"`) in diesem Jahr.
-#'
-#' @param data Ein Data Frame mit einer numerisch umwandelbaren `jahr`-
-#'   Spalte und einer Semester-Spalte.
-#' @param semester_col Name der Spalte mit den Semesterbezeichnungen.
-#'
-#' @return Eine Liste mit den Elementen `latest_year` (numerisch) und
-#'   `semester_in_latest_year` (`"w"` oder `"s"`).
-#' @noRd
-find_latest_semester <- function(data, semester_col = "semester") {
-  years <- suppressWarnings(as.numeric(data$jahr))
-  latest_year <- max(years, na.rm = TRUE)
-  latest_semester <- data |>
-    dplyr::mutate(.jahr = years) |>
-    dplyr::filter(.jahr == latest_year) |>
-    dplyr::pull(dplyr::all_of(semester_col)) |>
-    semester_to_code()
-  list(
-    latest_year = latest_year,
-    semester_in_latest_year = if ("w" %in% latest_semester) "w" else "s"
-  )
-}
-
-#' Verwendetes Trennzeichen in einer Organisationsspalte erkennen
-#'
-#' Prüft, ob die Spalte `" ; "` oder `"|"` als Mehrfachorganisations-
-#' Trennzeichen verwendet. Bricht mit einem Fehler ab, wenn beide Trennzeichen
-#' vorkommen. Gibt `"none"` zurück, wenn keines gefunden wird.
-#'
-#' @param x Ein Zeichenvektor (z. B. die Organisationsspalte).
-#'
-#' @return Einer der Werte `" ; "`, `"|"` oder `"none"`.
-#' @noRd
-detect_separator <- function(x) {
-  values <- stats::na.omit(as.character(x))
-  has_semicolon <- any(stringr::str_detect(values, stringr::fixed(" ; ")))
-  has_pipe <- any(stringr::str_detect(values, stringr::fixed("|")))
-  if (has_semicolon && has_pipe) {
-    stop("Organisation values use both ' ; ' and '|'. Please standardize the separator first.", call. = FALSE)
-  }
-  if (has_semicolon) {
-    return(" ; ")
-  }
-  if (has_pipe) {
-    return("|")
-  }
-  "none"
-}
-
-#' Jaccard-Token-Überlappung zweier Zeichenketten
-#'
-#' Tokenisiert beide Zeichenketten anhand von Leerzeichen und berechnet
-#' den Anteil gemeinsamer eindeutiger Tokens an der Gesamtmenge eindeutiger
-#' Tokens beider Zeichenketten.
-#'
-#' @param a Eine einzelne Zeichenkette.
-#' @param b Eine einzelne Zeichenkette.
-#'
-#' @return Ein numerischer Skalar zwischen 0 und 1.
-#' @noRd
-token_overlap <- function(a, b) {
-  a_tokens <- unique(stringr::str_split(a, "\\s+", simplify = FALSE)[[1]])
-  b_tokens <- unique(stringr::str_split(b, "\\s+", simplify = FALSE)[[1]])
-  a_tokens <- a_tokens[a_tokens != ""]
-  b_tokens <- b_tokens[b_tokens != ""]
-  if (length(a_tokens) == 0 || length(b_tokens) == 0) {
-    return(0)
-  }
-  shared <- length(intersect(a_tokens, b_tokens))
-  shared / length(unique(c(a_tokens, b_tokens)))
-}
-
 #' Wert sicher zu einer einzelnen Ganzzahl konvertieren
 #'
 #' Wandelt `x` in Integer um und unterdrückt dabei Konvertierungswarnungen.
@@ -663,42 +546,6 @@ safe_integer <- function(x) {
     return(NA_integer_)
   }
   value[[1]]
-}
-
-#' Benanntes Element mit Fallback-Standard extrahieren
-#'
-#' Funktioniert sowohl mit Listen (nach Name) als auch mit einzeiligen
-#' Data Frames (nach Spaltenname). Gibt `default` zurück, wenn `x`
-#' `NULL` ist, der Name nicht existiert oder der extrahierte Wert leer ist.
-#'
-#' @param x Eine Liste oder ein einzeiliger Data Frame.
-#' @param name Zu extrahierendes Element oder Spaltenname.
-#' @param default Rückgabewert bei fehlgeschlagener Extraktion.
-#'
-#' @return Der extrahierte Wert oder `default`.
-#' @noRd
-pluck_or_default <- function(x, name, default = NULL) {
-  if (is.null(x)) {
-    return(default)
-  }
-
-  if (is.data.frame(x) && name %in% names(x)) {
-    value <- x[[name]]
-    if (length(value) == 0) {
-      return(default)
-    }
-    return(value[[1]])
-  }
-
-  if (is.list(x) && !is.null(names(x)) && name %in% names(x)) {
-    value <- x[[name]]
-    if (length(value) == 0) {
-      return(default)
-    }
-    return(value)
-  }
-
-  default
 }
 
 #' Kandidatenauswahl per LLM generisch anfragen
@@ -746,6 +593,8 @@ request_llm_candidate_decisions <- function(
   if (nrow(query_tbl) == 0) {
     return(tibble::tibble())
   }
+
+  assert_http_dependencies()
 
   if (!is.null(progress_message)) {
     message(progress_message)
@@ -812,23 +661,23 @@ request_llm_candidate_decisions <- function(
 
       decision <- chat$chat_structured(prompt, type = decision_type)
 
-      selected_candidate_id <- pluck_or_default(decision, "selected_candidate_id", NA_character_)
+      selected_candidate_id <- purrr::pluck(decision, "selected_candidate_id", .default = NA_character_)
       if (is.na(selected_candidate_id) || identical(selected_candidate_id, "")) {
-        selected_candidate_id <- pluck_or_default(decision, "selected_gerit_id", NA_character_)
+        selected_candidate_id <- purrr::pluck(decision, "selected_gerit_id", .default = NA_character_)
       }
       if (is.na(selected_candidate_id) || identical(selected_candidate_id, "")) {
-        selected_candidate_id <- pluck_or_default(decision, "selected_luf_id", NA_character_)
+        selected_candidate_id <- purrr::pluck(decision, "selected_luf_id", .default = NA_character_)
       }
 
       progress_bar_update(llm_pb, idx)
 
       tibble::tibble(
         query_id = query_id,
-        decision = pluck_or_default(decision, "decision", "no_match") %||% "no_match",
+        decision = purrr::pluck(decision, "decision", .default = "no_match") %||% "no_match",
         selected_candidate_id = as.character(selected_candidate_id),
-        confidence = suppressWarnings(as.numeric(pluck_or_default(decision, "confidence", NA_real_))),
-        reason = pluck_or_default(decision, "reason", "") %||% "",
-        needs_review = isTRUE(pluck_or_default(decision, "needs_review", FALSE))
+        confidence = suppressWarnings(as.numeric(purrr::pluck(decision, "confidence", .default = NA_real_))),
+        reason = purrr::pluck(decision, "reason", .default = "") %||% "",
+        needs_review = isTRUE(purrr::pluck(decision, "needs_review", .default = FALSE))
       )
     }
   )
