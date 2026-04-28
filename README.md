@@ -10,9 +10,7 @@ remotes::install_git("http://srv-data01:30080/hex/hex-gerit/HEXmatchR")
 
 ## Was macht HEXmatchR?
 
-HEXmatchR spielt über die Variable `Organisation` GERIT-Daten an den HEX. Diese erlauben es wiederum, HEX-Daten mit DESTATIS-Daten (z.B. Personal und Studierendenzahlen) anzureichern.
-
-## Wie funktioniert HEXmatchR
+HEXmatchR spielt über die Variable `Organisation` GERIT-Daten an den HEX. Diese erlauben es wiederum, HEX-Daten mit DESTATIS-Daten (z.B. Personal und Studierendenzahlen) anzureichern. 
 
 ## In an Nutshell
 
@@ -35,3 +33,19 @@ Die GERIT Daten werden derzeit [gescrapet](http://srv-data01:30080/hex/hex-gerit
 Die GERIT- und die DESTATIS-Daten werden durch `merge_gerit_with_DESTATIS_system.R` zusammengeführt. Dies geschieht folgendermaßen:
 
 ![GERIT DESTATIS Match](man/figures/gerit_destatis_match.png)
+
+
+```mermaid
+flowchart TD
+    n2(["Start des Prozesses"])
+    n4[("Gerit /<br>Destatis.rds")]
+    n3["MatchOrga_Scraping /<br>Orga_Gerit"]
+    
+    subgraph Output
+    n5[("GERIT_DESTATIS_data")]
+    end
+
+    n2 --> n3
+    n4 --> n3
+    n3 --> n5
+```

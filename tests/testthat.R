@@ -9,6 +9,6 @@
 library(testthat)
 library(HEXmatchR)
 
-if (dir.exists("testthat") && length(list.files("testthat", pattern = "^test.*\.R$")) > 0) {
+if (dir.exists("testthat") && length(list.files("testthat", pattern = "^test.*/.R$")) > 0) {
   test_check("HEXmatchR")
 }
