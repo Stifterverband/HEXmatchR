@@ -1,0 +1,32 @@
+Package: HEXmatch
+Type: Package
+Title: Match University Organisations to GERIT with Tidyverse and Ellmer
+Version: 0.5.3
+Author: Felix Suessenbach
+Maintainer: Felix Suessenbach <felix.suessenbach@stifterverband.de>
+Description: Prepares scraped university organisation data, generates GERIT
+    candidates, asks OpenAI models for structured matching decisions through
+    ellmer, and writes compact matching outputs that can be merged back into
+    course data.
+License: Stifterverband-intern
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.3
+Roxygen: list(markdown = TRUE)
+Imports:
+    dplyr,
+    ellmer,
+    httr2,
+    jsonlite,
+    purrr,
+    readxl,
+    readr,
+    stringr,
+    tibble,
+    tidyr
+Suggests: 
+    DT,
+    HEXCleanR,
+    shiny,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

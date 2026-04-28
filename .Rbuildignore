@@ -1,0 +1,7 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^data$
+^matching-output-sample$
+^\.\.Rcheck$
+^tests/example\.r$
+^devtools_workflow\.R$

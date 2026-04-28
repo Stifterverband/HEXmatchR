@@ -1,0 +1,14 @@
+* installing *source* package 'hexmatch' ...
+** this is package 'hexmatch' version '0.5.3'
+** using staged installation
+** R
+** data
+*** moving datasets to lazyload DB
+Warnung in read.table(...)
+  ungültige Eingabe gefunden in der Eingabeverbindung 'C:\Users\mhu\Documents\gitlab\hexmatch\..Rcheck\00LOCK-hexmatch\00new\hexmatch/data/Fachgebiet.csv'
+Warnung in read.table(...)
+  unvollständige letzte Zeile von readTableHeader in 'C:\Users\mhu\Documents\gitlab\hexmatch\..Rcheck\00LOCK-hexmatch\00new\hexmatch/data/Fachgebiet.csv' gefunden
+Error in scan(file = file, what = what, sep = sep, quote = quote, dec = dec,  : 
+  Zeile 1 hatte keine 4 Elemente
+ERROR: lazydata failed for package 'hexmatch'
+* removing 'C:/Users/mhu/Documents/gitlab/hexmatch/..Rcheck/hexmatch'
