@@ -1,11 +1,11 @@
 library(tidyverse)
-library(HEXCleanR)
+#library(HEXCleanR)
 devtools::load_all()
 
 df_scraped <- read_rds("data/test_data_universitaet_fam.rds")
 
 df_sample <- df_scraped |>
-  dplyr::sample_n(size = 60)
+  dplyr::sample_n(size = 500)
 
 workflow_result <- run_matching_workflow(
   name_gerit = "Johann Wolfgang Goethe-Universität Frankfurt am Main",
@@ -19,5 +19,3 @@ workflow_result <- run_matching_workflow(
 
 mismatches <- check_mismatches(workflow_result)
 View(mismatches)
-glimpse(mismatches)
-install.packages(c("DT"))
