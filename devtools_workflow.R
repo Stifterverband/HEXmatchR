@@ -37,3 +37,4 @@ pkgdown::build_site()
 # # Optional: temporaere Check-/Build-Artefakte aufraeumen.
 # unlink("HEXmatch.Rcheck", recursive = TRUE, force = TRUE)
 # unlink(list.files(pattern = "^HEXmatch_.*[.]tar[.]gz$"), force = TRUE)
+ remotes::install_github("r-lib/roxygen2")

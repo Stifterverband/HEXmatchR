@@ -1,11 +1,11 @@
 library(tidyverse)
-#library(HEXCleanR)
-devtools::load_all()
+remotes::install_github("Stifterverband/HEXmatchR")
+library(HEXmatchR)
 
 df_scraped <- read_rds("data/test_data_universitaet_fam.rds")
 
 df_sample <- df_scraped |>
-  dplyr::sample_n(size = 500)
+  dplyr::sample_n(size = 50)
 
 workflow_result <- run_matching_workflow(
   name_gerit = "Johann Wolfgang Goethe-Universität Frankfurt am Main",
