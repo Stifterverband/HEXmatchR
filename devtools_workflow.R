@@ -16,7 +16,7 @@ usethis::use_version("patch")
 
 # Paket im aktuellen Arbeitsstand laden.
 devtools::load_all()
-devtools::install()
+# devtools::install()
 
 # Roxygen-Dokumentation aktualisieren:
 # - erzeugt/aktualisiert man/*.Rd
@@ -37,4 +37,4 @@ pkgdown::build_site()
 # # Optional: temporaere Check-/Build-Artefakte aufraeumen.
 # unlink("HEXmatch.Rcheck", recursive = TRUE, force = TRUE)
 # unlink(list.files(pattern = "^HEXmatch_.*[.]tar[.]gz$"), force = TRUE)
- remotes::install_github("r-lib/roxygen2")
+remotes::install_github("r-lib/roxygen2")

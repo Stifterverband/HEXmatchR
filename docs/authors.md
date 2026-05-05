@@ -2,16 +2,21 @@
 
 ## Authors
 
-- **Felix Suessenbach**. Maintainer.
+- **Malte Hückstädt**. Maintainer.
 
 ## Citation
 
-Suessenbach F (2026). *HEXmatchR: Match University Organisations to
-GERIT with Tidyverse and Ellmer*. R package version 0.5.3.
+Source:
+[`DESCRIPTION`](https://github.com/Stifterverband/HEXmatchR/blob/HEAD/DESCRIPTION)
+
+Hückstädt M (2026). *HEXmatchR: Match University Organisations to GERIT
+with Tidyverse and Ellmer*. R package version 0.5.3,
+<https://stifterverband.github.io/HEXmatchR/>.
 
     @Manual{,
       title = {HEXmatchR: Match University Organisations to GERIT with Tidyverse and Ellmer},
-      author = {Felix Suessenbach},
+      author = {Malte Hückstädt},
       year = {2026},
       note = {R package version 0.5.3},
+      url = {https://stifterverband.github.io/HEXmatchR/},
     }

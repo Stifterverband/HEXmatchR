@@ -21,7 +21,7 @@ extract_scraped_organisations(
 - df_scraped:
 
   Gescrapter Kursdaten-Data-Frame, z. B. aus
-  `HEXCleanR::load_data_from_sp()`.
+  [`HEXCleanR::load_data_from_sp()`](https://rdrr.io/pkg/HEXCleanR/man/load_data_from_sp.html).
 
 - organisation_col:
 

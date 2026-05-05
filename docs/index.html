@@ -32,11 +32,18 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/matching-process.html">UNKNOWN TITLE</a></li>
+  </ul>
+</li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
+<li class="nav-item"><a class="nav-link" href="https://github.com/Stifterverband/HEXmatchR/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -44,55 +51,78 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><div class="section level2">
-<h2 id="hexmatchr-">HEXmatchR <a href="http://srv-data01:30080/hex/HEXmatchR" class="external-link"><img src="reference/figures//hex_match_logo.png" align="right" height="200" style="float:right; height:200px;" alt="HEXmatchR website"></a>
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header"><h1 id="hexmatchr-">HEXmatchR <a href="http://srv-data01:30080/hex/HEXmatchR" class="external-link"><img src="reference/figures//hex_match_logo.png" align="right" height="200" style="float:right; height:200px;" alt="HEXmatchR website"></a>
 <a class="anchor" aria-label="anchor" href="#hexmatchr-"></a>
+</h1></div>
+<p><code>HEXmatchR</code> matched Organisationsnamen einer Universität der HEX-Scraping-Daten gegen die der entsprechenden GERIT-Organisationsnamen. Ziel des Matching ist es, Fachgebiete, Fächergruppen und Lehr- und Forschungsbereiche zu identifizieren und so DESTATIS-Metadaten (Studierendenzahlen, Lehrendenzahlen usw.) mit den HEX-Daten verbinden zu können.</p>
+<p>Kern des Matchingprozesses ist der Wrapper <code><a href="reference/run_matching_workflow.html">run_matching_workflow()</a></code>. Diese README beschreibt im folgenden, was in <code><a href="reference/run_matching_workflow.html">run_matching_workflow()</a></code> passiert: welche Daten hineingehen, wie Entscheidungen entstehen, wann OpenAI genutzt wird, was automatisch passiert, was manuell geprueft wird und welche Ergebnisse herauskommen.</p>
+<div class="section level2">
+<h2 id="wie-funktioniert-hexmatchr">Wie funktioniert HEXmatchR?<a class="anchor" aria-label="anchor" href="#wie-funktioniert-hexmatchr"></a>
 </h2>
+<p><code>HEXmatchR</code> stellt für die Nutzer einen simplen Wrapper namens <code>run_matching_workflow</code> bereit.</p>
+</div>
+<div class="section level2">
+<h2 id="voraussetzungen-für-hexmatchr">Voraussetzungen für HEXmatchR<a class="anchor" aria-label="anchor" href="#voraussetzungen-f%C3%BCr-hexmatchr"></a>
+</h2>
+<p>Der Workflow braucht drei Dinge:</p>
+<ol style="list-style-type: decimal">
+<li><p>Scraping Daten inkl. der Variable <code>organisation</code>: Die gescrapten Daten finden sich standardmäßig auf dem Sharepoint. Der Matchingprozess setzt - da er auf dem Cleaning aufbaut - eine möglichst saubere <code>organisation</code>-Variable voraus.</p></li>
+<li><p>Die <code>db_data.rds</code> einer Hochschule, um ggf. bereits gemachte Organisationen zu übernehmen.</p></li>
+<li><p>Gerit-Destatis-Daten: Weiterhin werden die Gerit-Destatis-Daten benötigt: <code>data/GERIT_DESTATIS_data.rds</code>. In ihnen befinden sich die Schlüsselvariable <code>Gerit_Orga</code>, die mit <code>organisation</code> aus den Scraping-Daten gemacht werden soll. Die Daten finden sich ebenfalls <a href="https://stifterverband.sharepoint.com/:f:/s/Dateiablage/IgBLB0wObx8uS6GhlQhnGBF-AdbXQxH89shU8m53tvxLau0?e=WXroR1" class="external-link">hier</a>.</p></li>
+</ol>
+</div>
+<div class="section level2">
+<h2 id="schnellstart-von-hexmatchr">Schnellstart von HEXmatchR<a class="anchor" aria-label="anchor" href="#schnellstart-von-hexmatchr"></a>
+</h2>
+<p>Das matching kann durch einen einfachen Wrapper angestoßen werden:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">workflow_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/run_matching_workflow.html">run_matching_workflow</a></span><span class="op">(</span></span>
+<span>  name_gerit <span class="op">=</span> <span class="st">"Johann Wolfgang Goethe-Universität Frankfurt am Main"</span>,</span>
+<span>  df_scraped <span class="op">=</span> <span class="va">df_sample</span>,</span>
+<span>  gold_data <span class="op">=</span> <span class="st">"data/db_data_universitaet_fam.rds"</span>, </span>
+<span>  output_dir <span class="op">=</span> <span class="st">"matching-output-sample"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Der Prozess läuft in folgenden Schritten ab:</p>
+<ol style="list-style-type: decimal">
+<li>GERIT-Daten filtern – Die Daten werden jeweils auf die entsprechende Hochschule gefiltert.</li>
+<li>Unique Organisationen identifizieren – Aus den Scraping- und GERIT-Daten werden die eindeutigen Organisationsnamen extrahiert.</li>
+<li>Namen normalisieren – Die Organisationsnamen werden vereinheitlicht.</li>
+<li>Matching – Das Matching erfolgt in zwei Stufen:
+<ul>
+<li>4.1 String-Match – Wo möglich, wird ein direkter Zeichenkettenvergleich durchgeführt.</li>
+<li>4.2 Embedding-basiertes Matching – Schlägt der String-Match fehl, wird wie folgt vorgegangen:
+<ol style="list-style-type: decimal">
+<li>Embeddings für Scraping- und GERIT-Organisationen werden erzeugt.</li>
+<li>Auf dieser Basis werden die fünf ähnlichsten Matching-Partner ermittelt.</li>
+<li>
+<code>gpt-4.1</code> wählt den besten Match aus den Top-5-Kandidaten.</li>
+<li>Ist sich <code>gpt-4.1</code> unsicher, werden die betreffenden Fälle manuell über eine Shiny-App anhand der Top-5-Kandidaten durch einen Menschen gematcht.</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+<p>Das folgende Diagramm visualisiert den Gesamtprozess:</p>
+<p><img src="reference/figures/hex_match_detail.png" alt="GERIT DESTATIS Match" width="600"></p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p><code>HEXmatchR</code> kann folgendermaßen installiert werde:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_git.html" class="external-link">install_git</a></span><span class="op">(</span><span class="st">"http://srv-data01:30080/hex/hex-gerit/HEXmatchR"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="was-macht-hexmatchr">Was macht HEXmatchR?<a class="anchor" aria-label="anchor" href="#was-macht-hexmatchr"></a>
-</h2>
-<p>HEXmatchR spielt über die Variable <code>Organisation</code> GERIT-Daten an den HEX. Diese erlauben es wiederum, HEX-Daten mit DESTATIS-Daten (z.B. Personal und Studierendenzahlen) anzureichern.</p>
-</div>
-<div class="section level2">
-<h2 id="wie-funktioniert-hexmatchr">Wie funktioniert HEXmatchR<a class="anchor" aria-label="anchor" href="#wie-funktioniert-hexmatchr"></a>
-</h2>
-</div>
-<div class="section level2">
-<h2 id="in-an-nutshell">In an Nutshell<a class="anchor" aria-label="anchor" href="#in-an-nutshell"></a>
-</h2>
-<p>todo!</p>
-<div class="float">
-<img src="reference/figures/hex_match_short.png" alt="hex_match_short"><div class="figcaption">hex_match_short</div>
+<p><code>HEXmatchR</code> kann simpel direkt von GitHub aus installiert werden:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"Stifterverband/HEXmatchR"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
-<div class="section level2">
-<h2 id="detaillierter-ablauf">Detaillierter Ablauf<a class="anchor" aria-label="anchor" href="#detaillierter-ablauf"></a>
-</h2>
-<p>todo!</p>
-<div class="float">
-<img src="reference/figures/hex_match_detail.png" alt="hex_match_detail"><div class="figcaption">hex_match_detail</div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="dependencies">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies"></a>
-</h2>
-<p>Damit HEXmatchR funktioniert, bedarf es einerseits der Daten von <a href="https://www.gerit.org/de/" class="external-link">GERIT</a> als auch der von <a href="https://erhebungsportal.estatistik.de/Erhebungsportal/informationen/statistik-des-hochschulpersonals-670" class="external-link">DESTATIS</a>.</p>
-<p>Die GERIT Daten werden derzeit <a href="http://srv-data01:30080/hex/hex-gerit/hex-scraping-gerit" class="external-link">gescrapet</a>, die DESTATIS-Daten werden einfach geladen (siehe link oben). Das Scraping wird zeitnah in das Paket überführt.</p>
-<p>Die GERIT- und die DESTATIS-Daten werden durch <code>merge_gerit_with_DESTATIS_system.R</code> zusammengeführt. Dies geschieht folgendermaßen:</p>
-<div class="float">
-<img src="reference/figures/gerit_destatis_match.png" alt="GERIT DESTATIS Match"><div class="figcaption">GERIT DESTATIS Match</div>
-</div>
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/Stifterverband/HEXmatchR/">Browse source code</a></li>
+<li><a href="https://github.com/Stifterverband/HEXmatchR/issues">Report a bug</a></li>
+</ul>
 </div>
 
-  </main><aside class="col-md-3"><div class="license">
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>Stifterverband-intern</li>
@@ -110,7 +140,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Felix Suessenbach <br><small class="roles"> Maintainer </small>   </li>
+<li>Malte Hückstädt <br><small class="roles"> Maintainer </small>   </li>
 </ul>
 </div>
 
@@ -121,7 +151,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Felix Suessenbach.</p>
+  <p>Developed by Malte Hückstädt.</p>
 </div>
 
 <div class="pkgdown-footer-right">

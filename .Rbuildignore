@@ -4,4 +4,5 @@
 ^matching-output-sample$
 ^\.\.Rcheck$
 ^tests/example\.r$
+^tests/test_for_yuri\.r$
 ^devtools_workflow\.R$
