@@ -32,12 +32,7 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/matching-process.html">UNKNOWN TITLE</a></li>
-  </ul>
-</li>
+<li class="nav-item"><a class="nav-link" href="articles/matching-process.html">Matching-Prozess</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -55,27 +50,11 @@
 <div class="page-header"><h1 id="hexmatchr-">HEXmatchR <a href="http://srv-data01:30080/hex/HEXmatchR" class="external-link"><img src="reference/figures//hex_match_logo.png" align="right" height="200" style="float:right; height:200px;" alt="HEXmatchR website"></a>
 <a class="anchor" aria-label="anchor" href="#hexmatchr-"></a>
 </h1></div>
-<p><code>HEXmatchR</code> matched Organisationsnamen einer Universität der HEX-Scraping-Daten gegen die der entsprechenden GERIT-Organisationsnamen. Ziel des Matching ist es, Fachgebiete, Fächergruppen und Lehr- und Forschungsbereiche zu identifizieren und so DESTATIS-Metadaten (Studierendenzahlen, Lehrendenzahlen usw.) mit den HEX-Daten verbinden zu können.</p>
-<p>Kern des Matchingprozesses ist der Wrapper <code><a href="reference/run_matching_workflow.html">run_matching_workflow()</a></code>. Diese README beschreibt im folgenden, was in <code><a href="reference/run_matching_workflow.html">run_matching_workflow()</a></code> passiert: welche Daten hineingehen, wie Entscheidungen entstehen, wann OpenAI genutzt wird, was automatisch passiert, was manuell geprueft wird und welche Ergebnisse herauskommen.</p>
+<p><code>HEXmatchR</code> matched Organisationsnamen einer Universität der HEX-Scraping-Daten mit denen der entsprechenden GERIT-Organisationsnamen. Ziel des Matching ist es, Fachgebiete, Fächergruppen und Lehr- und Forschungsbereiche zu identifizieren und so DESTATIS-Metadaten (Studierendenzahlen, Lehrendenzahlen usw.) mit den HEX-Daten verbinden zu können.</p>
 <div class="section level2">
 <h2 id="wie-funktioniert-hexmatchr">Wie funktioniert HEXmatchR?<a class="anchor" aria-label="anchor" href="#wie-funktioniert-hexmatchr"></a>
 </h2>
-<p><code>HEXmatchR</code> stellt für die Nutzer einen simplen Wrapper namens <code>run_matching_workflow</code> bereit.</p>
-</div>
-<div class="section level2">
-<h2 id="voraussetzungen-für-hexmatchr">Voraussetzungen für HEXmatchR<a class="anchor" aria-label="anchor" href="#voraussetzungen-f%C3%BCr-hexmatchr"></a>
-</h2>
-<p>Der Workflow braucht drei Dinge:</p>
-<ol style="list-style-type: decimal">
-<li><p>Scraping Daten inkl. der Variable <code>organisation</code>: Die gescrapten Daten finden sich standardmäßig auf dem Sharepoint. Der Matchingprozess setzt - da er auf dem Cleaning aufbaut - eine möglichst saubere <code>organisation</code>-Variable voraus.</p></li>
-<li><p>Die <code>db_data.rds</code> einer Hochschule, um ggf. bereits gemachte Organisationen zu übernehmen.</p></li>
-<li><p>Gerit-Destatis-Daten: Weiterhin werden die Gerit-Destatis-Daten benötigt: <code>data/GERIT_DESTATIS_data.rds</code>. In ihnen befinden sich die Schlüsselvariable <code>Gerit_Orga</code>, die mit <code>organisation</code> aus den Scraping-Daten gemacht werden soll. Die Daten finden sich ebenfalls <a href="https://stifterverband.sharepoint.com/:f:/s/Dateiablage/IgBLB0wObx8uS6GhlQhnGBF-AdbXQxH89shU8m53tvxLau0?e=WXroR1" class="external-link">hier</a>.</p></li>
-</ol>
-</div>
-<div class="section level2">
-<h2 id="schnellstart-von-hexmatchr">Schnellstart von HEXmatchR<a class="anchor" aria-label="anchor" href="#schnellstart-von-hexmatchr"></a>
-</h2>
-<p>Das matching kann durch einen einfachen Wrapper angestoßen werden:</p>
+<p><code>HEXmatchR</code> stellt für die Nutzer einen simplen Wrapper namens <code>run_matching_workflow</code> bereit. Der Wrapper kann folgendermaßen verwendet werden:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">workflow_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/run_matching_workflow.html">run_matching_workflow</a></span><span class="op">(</span></span>
 <span>  name_gerit <span class="op">=</span> <span class="st">"Johann Wolfgang Goethe-Universität Frankfurt am Main"</span>,</span>
@@ -83,7 +62,8 @@
 <span>  gold_data <span class="op">=</span> <span class="st">"data/db_data_universitaet_fam.rds"</span>, </span>
 <span>  output_dir <span class="op">=</span> <span class="st">"matching-output-sample"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>Der Prozess läuft in folgenden Schritten ab:</p>
+<p>Mit <code>name_gerit</code> spezifizieren wir den Namen der Universität im Kontext der GERIT-Daten. <code>df_scraped</code> ist unser Data Frame, den wir im Cleaning prozessieren. Wenn wir die Qualität des Matchings gegen den Goldstandard aus Matchingprozessen von Felix haben, können wir unter <code>gold_data</code> selbigen spezifizieren. Unter <code>output_dir</code> werden schließlich sämmtliche Ouputs des Matchings exportiert.</p>
+<p>Der Prozess hinter <code><a href="reference/run_matching_workflow.html">run_matching_workflow()</a></code> läuft in folgenden Schritten ab:</p>
 <ol style="list-style-type: decimal">
 <li>GERIT-Daten filtern – Die Daten werden jeweils auf die entsprechende Hochschule gefiltert.</li>
 <li>Unique Organisationen identifizieren – Aus den Scraping- und GERIT-Daten werden die eindeutigen Organisationsnamen extrahiert.</li>
@@ -105,6 +85,16 @@
 </ol>
 <p>Das folgende Diagramm visualisiert den Gesamtprozess:</p>
 <p><img src="reference/figures/hex_match_detail.png" alt="GERIT DESTATIS Match" width="600"></p>
+</div>
+<div class="section level2">
+<h2 id="voraussetzungen-für-hexmatchr">Voraussetzungen für HEXmatchR<a class="anchor" aria-label="anchor" href="#voraussetzungen-f%C3%BCr-hexmatchr"></a>
+</h2>
+<p>Der Workflow braucht drei Dinge:</p>
+<ol style="list-style-type: decimal">
+<li><p>Scraping Daten inkl. der Variable <code>organisation</code>: Die gescrapten Daten finden sich standardmäßig auf dem Sharepoint. Der Matchingprozess setzt - da er auf dem Cleaning aufbaut - eine möglichst saubere <code>organisation</code>-Variable voraus.</p></li>
+<li><p>Die <code>db_data.rds</code> einer Hochschule, um ggf. bereits gemachte Organisationen zu übernehmen.</p></li>
+<li><p>Gerit-Destatis-Daten: Weiterhin werden die Gerit-Destatis-Daten benötigt: <code>data/GERIT_DESTATIS_data.rds</code>. In ihnen befinden sich die Schlüsselvariable <code>Gerit_Orga</code>, die mit <code>organisation</code> aus den Scraping-Daten gemacht werden soll. Die Daten finden sich ebenfalls <a href="https://stifterverband.sharepoint.com/:f:/s/Dateiablage/IgBLB0wObx8uS6GhlQhnGBF-AdbXQxH89shU8m53tvxLau0?e=WXroR1" class="external-link">hier</a>.</p></li>
+</ol>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>

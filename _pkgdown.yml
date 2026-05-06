@@ -3,3 +3,11 @@ template:
 
 logo: man/figures/hex_match_logo.png
 url: https://github.com/Stifterverband/HEXmatchR
+
+navbar:
+  structure:
+    left: [reference, matching_process]
+  components:
+    matching_process:
+      text: Matching-Prozess
+      href: articles/matching-process.html

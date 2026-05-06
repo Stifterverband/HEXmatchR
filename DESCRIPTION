@@ -31,3 +31,4 @@ Config/testthat/edition: 3
 Config/roxygen2/version: 8.0.0.9000
 URL: https://stifterverband.github.io/HEXmatchR/
 BugReports: https://github.com/Stifterverband/HEXmatchR/issues
+RoxygenNote: 7.3.3.9000
