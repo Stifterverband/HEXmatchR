@@ -536,16 +536,16 @@ flowchart TD
     n3 --> n5
 ```
 
-![GERIT DESTATIS Match](reference/figures/gerit_destatis_match.png)
+![GERIT DESTATIS Match](figures/gerit_destatis_match.png)
 
 GERIT DESTATIS Match
 
 ## Bestehende Ablaufgrafiken
 
-![hex_match_short](reference/figures/hex_match_short.png)
+![hex_match_short](figures/hex_match_short.png)
 
 hex_match_short
 
-![hex_match_detail](reference/figures/hex_match_detail.png)
+![hex_match_detail](figures/hex_match_detail.png)
 
 hex_match_detail

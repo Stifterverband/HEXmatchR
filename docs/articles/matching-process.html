@@ -60,11 +60,8 @@
     
     
 <div class="section level2">
-<h2 id="matching-prozess">Matching Prozess<a class="anchor" aria-label="anchor" href="#matching-prozess"></a>
+<h2 id="voraussetzungen">Voraussetzungen<a class="anchor" aria-label="anchor" href="#voraussetzungen"></a>
 </h2>
-<div class="section level3">
-<h3 id="voraussetzungen">Voraussetzungen<a class="anchor" aria-label="anchor" href="#voraussetzungen"></a>
-</h3>
 <p>Um das Matching der Scraping-Daten mit denen von <a href="https://www.gerit.org/de/" class="external-link">GERIT</a> gewährleisten zu können,
 müssen in einem ersten Schritt die Daten von GERIT gescrapt werden.</p>
 <p>Dies geschieht mit: TODO</p>
@@ -76,15 +73,15 @@ wird auch hier auf den AI-Match-Workflow zurückgegriffen. Dies erspart
 uns das jährliche Anpassen von Regex-Patterns beim Matching und
 harmonisiert so den Workflow.</p>
 <p>Folgende Grafik illustriert den Workflow:</p>
-<p><img src="reference/figures/gerit_destatis_match.png" alt="GERIT DESTATIS Match" width="400"></p>
+<p><img src="figures/gerit_destatis_match.png" alt="GERIT DESTATIS Match" width="400"></p>
 </div>
+<div class="section level2">
+<h2 id="matching---der-prozess-schritt-für-schritt">Matching - Der Prozess Schritt für Schritt<a class="anchor" aria-label="anchor" href="#matching---der-prozess-schritt-f%C3%BCr-schritt"></a>
+</h2>
+<p><img src="figures/hex_match_detail.png" alt="GERIT DESTATIS Match" width="700"></p>
 <div class="section level3">
-<h3 id="matching---der-prozess-schritt-für-schritt">Matching - Der Prozess Schritt für Schritt<a class="anchor" aria-label="anchor" href="#matching---der-prozess-schritt-f%C3%BCr-schritt"></a>
+<h3 id="nutzer-und-eingabedaten-vorbereiten">1. Nutzer und Eingabedaten vorbereiten<a class="anchor" aria-label="anchor" href="#nutzer-und-eingabedaten-vorbereiten"></a>
 </h3>
-<p><img src="reference/figures/hex_match_detail.png" alt="GERIT DESTATIS Match" width="700"></p>
-<div class="section level4">
-<h4 id="nutzer-und-eingabedaten-vorbereiten">1. Nutzer und Eingabedaten vorbereiten<a class="anchor" aria-label="anchor" href="#nutzer-und-eingabedaten-vorbereiten"></a>
-</h4>
 <p>Der Workflow ermittelt zuerst den aktuellen Nutzernamen ueber
 <code>current_username()</code>. Dafuer werden die Umgebungsvariablen
 <code>USERNAME</code>, <code>USER</code> und <code>LOGNAME</code>
@@ -94,9 +91,9 @@ eigentliche Matching-Spalte wird spaeter in <code>organisation</code>
 umbenannt, egal wie sie urspruenglich hiess, solange
 <code>organisation_col</code> korrekt gesetzt ist.</p>
 </div>
-<div class="section level4">
-<h4 id="gerit-destatis-daten-fuer-eine-hochschule-laden">2. GERIT-DESTATIS-Daten fuer eine Hochschule laden<a class="anchor" aria-label="anchor" href="#gerit-destatis-daten-fuer-eine-hochschule-laden"></a>
-</h4>
+<div class="section level3">
+<h3 id="gerit-destatis-daten-fuer-eine-hochschule-laden">2. GERIT-DESTATIS-Daten fuer eine Hochschule laden<a class="anchor" aria-label="anchor" href="#gerit-destatis-daten-fuer-eine-hochschule-laden"></a>
+</h3>
 <p><code>prepare_gerit_data(name_gerit)</code> liest
 standardmaessig:</p>
 <pre class="text"><code><span><span class="va">data</span><span class="op">/</span><span class="va">GERIT_DESTATIS_data.rds</span></span></code></pre>
@@ -129,9 +126,9 @@ Einrichtungsname innerhalb der Hochschule eindeutig ist.</li>
 <p>Diese gefilterte GERIT-Tabelle ist die Referenzmenge fuer alle
 folgenden Schritte.</p>
 </div>
-<div class="section level4">
-<h4 id="gescrapte-organisationen-extrahieren">3. Gescrapte Organisationen extrahieren<a class="anchor" aria-label="anchor" href="#gescrapte-organisationen-extrahieren"></a>
-</h4>
+<div class="section level3">
+<h3 id="gescrapte-organisationen-extrahieren">3. Gescrapte Organisationen extrahieren<a class="anchor" aria-label="anchor" href="#gescrapte-organisationen-extrahieren"></a>
+</h3>
 <p><a href="https://github.com/Stifterverband/HEXmatchR/reference/extract_scraped_organisations.md"><code>extract_scraped_organisations()</code></a>
 arbeitet auf <code>df_scraped</code> und erzeugt eine
 Organisationstabelle auf eindeutiger Organisations-Ebene.</p>
@@ -180,9 +177,9 @@ einfach und transparent:</p>
 <p>ungefaehr werden:</p>
 <pre class="text"><code>wirtschaftsinformatik a</code></pre>
 </div>
-<div class="section level4">
-<h4 id="deterministisches-matching">4. Deterministisches Matching<a class="anchor" aria-label="anchor" href="#deterministisches-matching"></a>
-</h4>
+<div class="section level3">
+<h3 id="deterministisches-matching">4. Deterministisches Matching<a class="anchor" aria-label="anchor" href="#deterministisches-matching"></a>
+</h3>
 <p><code>apply_deterministic_matches()</code> versucht zuerst sichere
 automatische Treffer, bevor Embeddings oder ein LLM genutzt werden.</p>
 <p>Es gibt zwei deterministische Match-Typen:</p>
@@ -221,9 +218,9 @@ direkt in die Match-Spalten geschrieben:</p>
 <li><code>needs_review = FALSE</code></li>
 </ul>
 </div>
-<div class="section level4">
-<h4 id="embedding-kandidaten-erzeugen">5. Embedding-Kandidaten erzeugen<a class="anchor" aria-label="anchor" href="#embedding-kandidaten-erzeugen"></a>
-</h4>
+<div class="section level3">
+<h3 id="embedding-kandidaten-erzeugen">5. Embedding-Kandidaten erzeugen<a class="anchor" aria-label="anchor" href="#embedding-kandidaten-erzeugen"></a>
+</h3>
 <p>Alle Organisationen, die nach dem deterministischen Schritt noch
 <code>matched == "no"</code> sind, gehen in <a href="https://github.com/Stifterverband/HEXmatchR/reference/generate_embedding_candidates.md"><code>generate_embedding_candidates()</code></a>.</p>
 <p>Dieser Schritt erzeugt noch keine finale Entscheidung. Er erzeugt nur
@@ -267,9 +264,9 @@ Embedding. Bereits vorhandene GERIT-Embeddings werden wiederverwendet.
 Query-Embeddings der gescrapten Organisationen werden absichtlich nicht
 dauerhaft gecacht, weil sie laufabhaengig sind.</p>
 </div>
-<div class="section level4">
-<h4 id="llm-entscheidung">6. LLM-Entscheidung<a class="anchor" aria-label="anchor" href="#llm-entscheidung"></a>
-</h4>
+<div class="section level3">
+<h3 id="llm-entscheidung">6. LLM-Entscheidung<a class="anchor" aria-label="anchor" href="#llm-entscheidung"></a>
+</h3>
 <p><a href="https://github.com/Stifterverband/HEXmatchR/reference/match_organisations_with_llm.md"><code>match_organisations_with_llm()</code></a>
 verarbeitet nur noch offene Organisationen. Deterministische Matches
 werden nicht erneut an das LLM geschickt.</p>
@@ -348,9 +345,9 @@ in die Match-Spalten uebernommen:</p>
 <p>Wenn fuer eine Organisation keine Embedding-Kandidaten erzeugt
 wurden, wird automatisch <code>no_match</code> mit Review gesetzt.</p>
 </div>
-<div class="section level4">
-<h4 id="automatischer-zwischenstand">7. Automatischer Zwischenstand<a class="anchor" aria-label="anchor" href="#automatischer-zwischenstand"></a>
-</h4>
+<div class="section level3">
+<h3 id="automatischer-zwischenstand">7. Automatischer Zwischenstand<a class="anchor" aria-label="anchor" href="#automatischer-zwischenstand"></a>
+</h3>
 <p>Nach Deterministik, Embeddings und LLM entsteht eine Tabelle auf
 Organisationsebene:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -366,9 +363,9 @@ Organisationsebene:</p>
 Scraping-Zeilen zurueckgespielt, aber noch vor einem optionalen
 manuellen Review.</p>
 </div>
-<div class="section level4">
-<h4 id="optionaler-manueller-review">8. Optionaler manueller Review<a class="anchor" aria-label="anchor" href="#optionaler-manueller-review"></a>
-</h4>
+<div class="section level3">
+<h3 id="optionaler-manueller-review">8. Optionaler manueller Review<a class="anchor" aria-label="anchor" href="#optionaler-manueller-review"></a>
+</h3>
 <p><a href="https://github.com/Stifterverband/HEXmatchR/reference/run_matching_workflow.md"><code>run_matching_workflow()</code></a>
 zaehlt Review-Faelle so:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -397,9 +394,9 @@ die manuellen Entscheidungen zurueck in die Organisationsebene.</p>
 <p>Wenn <code>auto_review = FALSE</code>, werden offene Review-Faelle
 nicht aufgeloest. Sie bleiben im Output sichtbar.</p>
 </div>
-<div class="section level4">
-<h4 id="zurueckspielen-auf-die-urspruenglichen-gescrapten-daten">9. Zurueckspielen auf die urspruenglichen gescrapten Daten<a class="anchor" aria-label="anchor" href="#zurueckspielen-auf-die-urspruenglichen-gescrapten-daten"></a>
-</h4>
+<div class="section level3">
+<h3 id="zurueckspielen-auf-die-urspruenglichen-gescrapten-daten">9. Zurueckspielen auf die urspruenglichen gescrapten Daten<a class="anchor" aria-label="anchor" href="#zurueckspielen-auf-die-urspruenglichen-gescrapten-daten"></a>
+</h3>
 <p><code>join_matches_back_to_scraped()</code> fuehrt die
 Organisationsebene wieder mit den urspruenglichen Kursdaten
 zusammen.</p>
@@ -436,9 +433,9 @@ braucht oder irgendeine Komponente nicht gematcht ist</li>
 <p>und speichert dasselbe Objekt als <code>.rds</code> in
 <code>output_dir</code>.</p>
 </div>
-<div class="section level4">
-<h4 id="optionaler-goldstandard-vergleich">10. Optionaler Goldstandard-Vergleich<a class="anchor" aria-label="anchor" href="#optionaler-goldstandard-vergleich"></a>
-</h4>
+<div class="section level3">
+<h3 id="optionaler-goldstandard-vergleich">10. Optionaler Goldstandard-Vergleich<a class="anchor" aria-label="anchor" href="#optionaler-goldstandard-vergleich"></a>
+</h3>
 <p>Wenn <code>gold_data</code> uebergeben wird, startet <a href="https://github.com/Stifterverband/HEXmatchR/reference/evaluate_against_goldstandard.md"><code>evaluate_against_goldstandard()</code></a>.</p>
 <p><code>gold_data</code> kann ein Data Frame oder ein Pfad zu einer
 <code>.rds</code>-Datei sein. Die Spaltennamen werden in Kleinbuchstaben
@@ -492,9 +489,9 @@ auf und gibt die ersten Fehlzuordnungen auf der Konsole aus, falls es
 welche gibt.</p>
 </div>
 </div>
-<div class="section level3">
-<h3 id="output-von-run_matching_workflow">Output von <code>run_matching_workflow()</code><a class="anchor" aria-label="anchor" href="#output-von-run_matching_workflow"></a>
-</h3>
+<div class="section level2">
+<h2 id="output-von-run_matching_workflow">Output von <code>run_matching_workflow()</code><a class="anchor" aria-label="anchor" href="#output-von-run_matching_workflow"></a>
+</h2>
 <p>Der Workflow gibt eine Liste zurueck:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -505,17 +502,17 @@ welche gibt.</p>
 <span>  goldstandard_evaluation <span class="op">=</span> <span class="va">...</span>,</span>
 <span>  scraped_output_file <span class="op">=</span> <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="section level4">
-<h4 id="scraped_data_with_matching">
+<div class="section level3">
+<h3 id="scraped_data_with_matching">
 <code>scraped_data_with_matching</code><a class="anchor" aria-label="anchor" href="#scraped_data_with_matching"></a>
-</h4>
+</h3>
 <p>Die vollstaendigen urspruenglichen gescrapten Daten mit angespielten
 Matching-Spalten. Das ist der zentrale Arbeitsoutput.</p>
 </div>
-<div class="section level4">
-<h4 id="matched_organisations">
+<div class="section level3">
+<h3 id="matched_organisations">
 <code>matched_organisations</code><a class="anchor" aria-label="anchor" href="#matched_organisations"></a>
-</h4>
+</h3>
 <p>Alle Organisationen, die nach automatischem Matching und optionalem
 Review <code>matched == "yes"</code> haben. Zusaetzlich werden Metadaten
 gesetzt:</p>
@@ -526,10 +523,10 @@ gesetzt:</p>
 <li><code>hochschule</code></li>
 </ul>
 </div>
-<div class="section level4">
-<h4 id="review_cases">
+<div class="section level3">
+<h3 id="review_cases">
 <code>review_cases</code><a class="anchor" aria-label="anchor" href="#review_cases"></a>
-</h4>
+</h3>
 <p>Eine kompakte Tabelle der offenen oder unsicheren Faelle:</p>
 <ul>
 <li><code>scraped_ID</code></li>
@@ -541,25 +538,25 @@ gesetzt:</p>
 <li><code>needs_review</code></li>
 </ul>
 </div>
-<div class="section level4">
-<h4 id="goldstandard_evaluation">
+<div class="section level3">
+<h3 id="goldstandard_evaluation">
 <code>goldstandard_evaluation</code><a class="anchor" aria-label="anchor" href="#goldstandard_evaluation"></a>
-</h4>
+</h3>
 <p><code>NULL</code>, wenn kein <code>gold_data</code> uebergeben wurde.
 Sonst eine Liste mit <code>comparison</code>, <code>metrics</code> und
 <code>by_gold_matchingart</code>.</p>
 </div>
-<div class="section level4">
-<h4 id="scraped_output_file">
+<div class="section level3">
+<h3 id="scraped_output_file">
 <code>scraped_output_file</code><a class="anchor" aria-label="anchor" href="#scraped_output_file"></a>
-</h4>
+</h3>
 <p>Pfad zur geschriebenen <code>.rds</code>-Datei mit
 <code>scraped_data_with_matching</code>.</p>
 </div>
-<div class="section level4">
-<h4 id="debug">
+<div class="section level3">
+<h3 id="debug">
 <code>debug</code><a class="anchor" aria-label="anchor" href="#debug"></a>
-</h4>
+</h3>
 <p>Nur vorhanden, wenn <code>include_debug = TRUE</code>. Dann enthaelt
 der Output zusaetzlich:</p>
 <ul>
@@ -576,9 +573,9 @@ der Output zusaetzlich:</p>
 <code>include_debug = TRUE</code> sehr hilfreich.</p>
 </div>
 </div>
-<div class="section level3">
-<h3 id="bedeutung-der-wichtigsten-match-spalten">Bedeutung der wichtigsten Match-Spalten<a class="anchor" aria-label="anchor" href="#bedeutung-der-wichtigsten-match-spalten"></a>
-</h3>
+<div class="section level2">
+<h2 id="bedeutung-der-wichtigsten-match-spalten">Bedeutung der wichtigsten Match-Spalten<a class="anchor" aria-label="anchor" href="#bedeutung-der-wichtigsten-match-spalten"></a>
+</h2>
 <table class="table">
 <colgroup>
 <col width="50%">
@@ -656,9 +653,9 @@ noch offen ist</td>
 </tbody>
 </table>
 </div>
-<div class="section level3">
-<h3 id="welche-funktionen-nutzt-der-workflow">Welche Funktionen nutzt der Workflow?<a class="anchor" aria-label="anchor" href="#welche-funktionen-nutzt-der-workflow"></a>
-</h3>
+<div class="section level2">
+<h2 id="welche-funktionen-nutzt-der-workflow">Welche Funktionen nutzt der Workflow?<a class="anchor" aria-label="anchor" href="#welche-funktionen-nutzt-der-workflow"></a>
+</h2>
 <pre class="text"><code>run_matching_workflow()
 ├── current_username()
 ├── prepare_gerit_data()
@@ -688,9 +685,9 @@ noch offen ist</td>
 ├── evaluate_against_goldstandard()   optional bei gold_data != NULL
 └── check_mismatches()                optional bei gold_data != NULL</code></pre>
 </div>
-<div class="section level3">
-<h3 id="was-der-workflow-bewusst-nicht-tut">Was der Workflow bewusst nicht tut<a class="anchor" aria-label="anchor" href="#was-der-workflow-bewusst-nicht-tut"></a>
-</h3>
+<div class="section level2">
+<h2 id="was-der-workflow-bewusst-nicht-tut">Was der Workflow bewusst nicht tut<a class="anchor" aria-label="anchor" href="#was-der-workflow-bewusst-nicht-tut"></a>
+</h2>
 <ul>
 <li>Er matched nicht blind auf den hoechsten Embedding-Score. Der Score
 erzeugt nur Kandidaten.</li>
@@ -707,9 +704,9 @@ damit das Ergebnis auch nach spaeteren Fehlern im optionalen
 Goldstandard-Schritt verfuegbar bleibt.</li>
 </ul>
 </div>
-<div class="section level3">
-<h3 id="typische-parametrierung">Typische Parametrierung<a class="anchor" aria-label="anchor" href="#typische-parametrierung"></a>
-</h3>
+<div class="section level2">
+<h2 id="typische-parametrierung">Typische Parametrierung<a class="anchor" aria-label="anchor" href="#typische-parametrierung"></a>
+</h2>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/run_matching_workflow.html">run_matching_workflow</a></span><span class="op">(</span></span>
@@ -746,9 +743,9 @@ Goldstandard-Schritt verfuegbar bleibt.</li>
 <span></span>
 <span><span class="va">result</span><span class="op">$</span><span class="va">goldstandard_evaluation</span><span class="op">$</span><span class="va">metrics</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="abgrenzung-zu-anderen-funktionen">Abgrenzung zu anderen Funktionen<a class="anchor" aria-label="anchor" href="#abgrenzung-zu-anderen-funktionen"></a>
-</h3>
+<div class="section level2">
+<h2 id="abgrenzung-zu-anderen-funktionen">Abgrenzung zu anderen Funktionen<a class="anchor" aria-label="anchor" href="#abgrenzung-zu-anderen-funktionen"></a>
+</h2>
 <p><a href="https://github.com/Stifterverband/HEXmatchR/reference/run_matching_workflow.md"><code>run_matching_workflow()</code></a>
 ist die transparente End-to-End-Funktion mit automatischem Matching,
 optionalem Review, optionalem Goldstandard-Vergleich und Speicherung des
@@ -779,9 +776,9 @@ Kurs-Rohdaten ein.</li>
 mehrerer Matching-Runden.</li>
 </ul>
 </div>
-<div class="section level3">
-<h3 id="gerit-destatis-erstellung">GERIT-DESTATIS-Erstellung<a class="anchor" aria-label="anchor" href="#gerit-destatis-erstellung"></a>
-</h3>
+<div class="section level2">
+<h2 id="gerit-destatis-erstellung">GERIT-DESTATIS-Erstellung<a class="anchor" aria-label="anchor" href="#gerit-destatis-erstellung"></a>
+</h2>
 <p>Die GERIT- und DESTATIS-Daten werden durch
 <code>merge_gerit_with_DESTATIS_system.R</code> zusammengefuehrt.</p>
 <pre class="mermaid"><code>flowchart TD
@@ -797,22 +794,21 @@ mehrerer Matching-Runden.</li>
     n4 --&gt; n3
     n3 --&gt; n5</code></pre>
 <div class="float">
-<img src="reference/figures/gerit_destatis_match.png" alt="GERIT DESTATIS Match"><div class="figcaption">GERIT DESTATIS Match</div>
+<img src="figures/gerit_destatis_match.png" alt="GERIT DESTATIS Match"><div class="figcaption">GERIT DESTATIS Match</div>
 </div>
 <p>GERIT DESTATIS Match</p>
 </div>
-<div class="section level3">
-<h3 id="bestehende-ablaufgrafiken">Bestehende Ablaufgrafiken<a class="anchor" aria-label="anchor" href="#bestehende-ablaufgrafiken"></a>
-</h3>
+<div class="section level2">
+<h2 id="bestehende-ablaufgrafiken">Bestehende Ablaufgrafiken<a class="anchor" aria-label="anchor" href="#bestehende-ablaufgrafiken"></a>
+</h2>
 <div class="float">
-<img src="reference/figures/hex_match_short.png" alt="hex_match_short"><div class="figcaption">hex_match_short</div>
+<img src="figures/hex_match_short.png" alt="hex_match_short"><div class="figcaption">hex_match_short</div>
 </div>
 <p>hex_match_short</p>
 <div class="float">
-<img src="reference/figures/hex_match_detail.png" alt="hex_match_detail"><div class="figcaption">hex_match_detail</div>
+<img src="figures/hex_match_detail.png" alt="hex_match_detail"><div class="figcaption">hex_match_detail</div>
 </div>
 <p>hex_match_detail</p>
-</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

@@ -1,8 +1,6 @@
 # Matching-Prozess
 
-## Matching Prozess
-
-### Voraussetzungen
+## Voraussetzungen
 
 Um das Matching der Scraping-Daten mit denen von
 [GERIT](https://www.gerit.org/de/) gewährleisten zu können, müssen in
@@ -22,13 +20,13 @@ harmonisiert so den Workflow.
 
 Folgende Grafik illustriert den Workflow:
 
-![GERIT DESTATIS Match](reference/figures/gerit_destatis_match.png)
+![GERIT DESTATIS Match](figures/gerit_destatis_match.png)
 
-### Matching - Der Prozess Schritt für Schritt
+## Matching - Der Prozess Schritt für Schritt
 
-![GERIT DESTATIS Match](reference/figures/hex_match_detail.png)
+![GERIT DESTATIS Match](figures/hex_match_detail.png)
 
-#### 1. Nutzer und Eingabedaten vorbereiten
+### 1. Nutzer und Eingabedaten vorbereiten
 
 Der Workflow ermittelt zuerst den aktuellen Nutzernamen ueber
 `current_username()`. Dafuer werden die Umgebungsvariablen `USERNAME`,
@@ -39,7 +37,7 @@ Metadaten.
 Matching-Spalte wird spaeter in `organisation` umbenannt, egal wie sie
 urspruenglich hiess, solange `organisation_col` korrekt gesetzt ist.
 
-#### 2. GERIT-DESTATIS-Daten fuer eine Hochschule laden
+### 2. GERIT-DESTATIS-Daten fuer eine Hochschule laden
 
 `prepare_gerit_data(name_gerit)` liest standardmaessig:
 
@@ -70,7 +68,7 @@ Dabei passiert Folgendes:
 Diese gefilterte GERIT-Tabelle ist die Referenzmenge fuer alle folgenden
 Schritte.
 
-#### 3. Gescrapte Organisationen extrahieren
+### 3. Gescrapte Organisationen extrahieren
 
 [`extract_scraped_organisations()`](https://github.com/Stifterverband/HEXmatchR/reference/extract_scraped_organisations.md)
 arbeitet auf `df_scraped` und erzeugt eine Organisationstabelle auf
@@ -121,7 +119,7 @@ ungefaehr werden:
 wirtschaftsinformatik a
 ```
 
-#### 4. Deterministisches Matching
+### 4. Deterministisches Matching
 
 `apply_deterministic_matches()` versucht zuerst sichere automatische
 Treffer, bevor Embeddings oder ein LLM genutzt werden.
@@ -155,7 +153,7 @@ direkt in die Match-Spalten geschrieben:
 - `match_reason = "Deterministic ... match."`
 - `needs_review = FALSE`
 
-#### 5. Embedding-Kandidaten erzeugen
+### 5. Embedding-Kandidaten erzeugen
 
 Alle Organisationen, die nach dem deterministischen Schritt noch
 `matched == "no"` sind, gehen in
@@ -206,7 +204,7 @@ Embedding. Bereits vorhandene GERIT-Embeddings werden wiederverwendet.
 Query-Embeddings der gescrapten Organisationen werden absichtlich nicht
 dauerhaft gecacht, weil sie laufabhaengig sind.
 
-#### 6. LLM-Entscheidung
+### 6. LLM-Entscheidung
 
 [`match_organisations_with_llm()`](https://github.com/Stifterverband/HEXmatchR/reference/match_organisations_with_llm.md)
 verarbeitet nur noch offene Organisationen. Deterministische Matches
@@ -275,7 +273,7 @@ leeren Match-Datensatz:
 Wenn fuer eine Organisation keine Embedding-Kandidaten erzeugt wurden,
 wird automatisch `no_match` mit Review gesetzt.
 
-#### 7. Automatischer Zwischenstand
+### 7. Automatischer Zwischenstand
 
 Nach Deterministik, Embeddings und LLM entsteht eine Tabelle auf
 Organisationsebene:
@@ -299,7 +297,7 @@ match_result$df_scraped_matched
 `df_scraped_matched` ist bereits auf die urspruenglichen Scraping-Zeilen
 zurueckgespielt, aber noch vor einem optionalen manuellen Review.
 
-#### 8. Optionaler manueller Review
+### 8. Optionaler manueller Review
 
 [`run_matching_workflow()`](https://github.com/Stifterverband/HEXmatchR/reference/run_matching_workflow.md)
 zaehlt Review-Faelle so:
@@ -336,7 +334,7 @@ die manuellen Entscheidungen zurueck in die Organisationsebene.
 Wenn `auto_review = FALSE`, werden offene Review-Faelle nicht
 aufgeloest. Sie bleiben im Output sichtbar.
 
-#### 9. Zurueckspielen auf die urspruenglichen gescrapten Daten
+### 9. Zurueckspielen auf die urspruenglichen gescrapten Daten
 
 `join_matches_back_to_scraped()` fuehrt die Organisationsebene wieder
 mit den urspruenglichen Kursdaten zusammen.
@@ -374,7 +372,7 @@ result$scraped_data_with_matching
 
 und speichert dasselbe Objekt als `.rds` in `output_dir`.
 
-#### 10. Optionaler Goldstandard-Vergleich
+### 10. Optionaler Goldstandard-Vergleich
 
 Wenn `gold_data` uebergeben wird, startet
 [`evaluate_against_goldstandard()`](https://github.com/Stifterverband/HEXmatchR/reference/evaluate_against_goldstandard.md).
@@ -428,7 +426,7 @@ Direkt danach ruft der Workflow
 auf und gibt die ersten Fehlzuordnungen auf der Konsole aus, falls es
 welche gibt.
 
-### Output von `run_matching_workflow()`
+## Output von `run_matching_workflow()`
 
 Der Workflow gibt eine Liste zurueck:
 
@@ -444,12 +442,12 @@ list(
 )
 ```
 
-#### `scraped_data_with_matching`
+### `scraped_data_with_matching`
 
 Die vollstaendigen urspruenglichen gescrapten Daten mit angespielten
 Matching-Spalten. Das ist der zentrale Arbeitsoutput.
 
-#### `matched_organisations`
+### `matched_organisations`
 
 Alle Organisationen, die nach automatischem Matching und optionalem
 Review `matched == "yes"` haben. Zusaetzlich werden Metadaten gesetzt:
@@ -459,7 +457,7 @@ Review `matched == "yes"` haben. Zusaetzlich werden Metadaten gesetzt:
 - `this_matching_is`
 - `hochschule`
 
-#### `review_cases`
+### `review_cases`
 
 Eine kompakte Tabelle der offenen oder unsicheren Faelle:
 
@@ -471,16 +469,16 @@ Eine kompakte Tabelle der offenen oder unsicheren Faelle:
 - `match_reason`
 - `needs_review`
 
-#### `goldstandard_evaluation`
+### `goldstandard_evaluation`
 
 `NULL`, wenn kein `gold_data` uebergeben wurde. Sonst eine Liste mit
 `comparison`, `metrics` und `by_gold_matchingart`.
 
-#### `scraped_output_file`
+### `scraped_output_file`
 
 Pfad zur geschriebenen `.rds`-Datei mit `scraped_data_with_matching`.
 
-#### `debug`
+### `debug`
 
 Nur vorhanden, wenn `include_debug = TRUE`. Dann enthaelt der Output
 zusaetzlich:
@@ -497,7 +495,7 @@ zusaetzlich:
 Fuer Fehlersuche, Audits und Nachvollziehbarkeit ist
 `include_debug = TRUE` sehr hilfreich.
 
-### Bedeutung der wichtigsten Match-Spalten
+## Bedeutung der wichtigsten Match-Spalten
 
 | Spalte | Bedeutung |
 |----|----|
@@ -515,7 +513,7 @@ Fuer Fehlersuche, Audits und Nachvollziehbarkeit ist
 | `match_reason` | Begruendung des deterministischen, LLM- oder Review-Entscheids |
 | `needs_review` | `TRUE`, wenn der Fall manuell geprueft werden sollte oder noch offen ist |
 
-### Welche Funktionen nutzt der Workflow?
+## Welche Funktionen nutzt der Workflow?
 
 ``` text
 run_matching_workflow()
@@ -548,7 +546,7 @@ run_matching_workflow()
 └── check_mismatches()                optional bei gold_data != NULL
 ```
 
-### Was der Workflow bewusst nicht tut
+## Was der Workflow bewusst nicht tut
 
 - Er matched nicht blind auf den hoechsten Embedding-Score. Der Score
   erzeugt nur Kandidaten.
@@ -562,7 +560,7 @@ run_matching_workflow()
   Ergebnis auch nach spaeteren Fehlern im optionalen
   Goldstandard-Schritt verfuegbar bleibt.
 
-### Typische Parametrierung
+## Typische Parametrierung
 
 ``` r
 
@@ -610,7 +608,7 @@ result <- run_matching_workflow(
 result$goldstandard_evaluation$metrics
 ```
 
-### Abgrenzung zu anderen Funktionen
+## Abgrenzung zu anderen Funktionen
 
 [`run_matching_workflow()`](https://github.com/Stifterverband/HEXmatchR/reference/run_matching_workflow.md)
 ist die transparente End-to-End-Funktion mit automatischem Matching,
@@ -637,7 +635,7 @@ Daneben gibt es weitere Funktionen:
 - `next_matching_iteration()` und `parse_matching_metadata()` helfen bei
   der Verwaltung mehrerer Matching-Runden.
 
-### GERIT-DESTATIS-Erstellung
+## GERIT-DESTATIS-Erstellung
 
 Die GERIT- und DESTATIS-Daten werden durch
 `merge_gerit_with_DESTATIS_system.R` zusammengefuehrt.
@@ -657,21 +655,21 @@ flowchart TD
     n3 --> n5
 ```
 
-![GERIT DESTATIS Match](reference/figures/gerit_destatis_match.png)
+![GERIT DESTATIS Match](figures/gerit_destatis_match.png)
 
 GERIT DESTATIS Match
 
 GERIT DESTATIS Match
 
-### Bestehende Ablaufgrafiken
+## Bestehende Ablaufgrafiken
 
-![hex_match_short](reference/figures/hex_match_short.png)
-
-hex_match_short
+![hex_match_short](figures/hex_match_short.png)
 
 hex_match_short
 
-![hex_match_detail](reference/figures/hex_match_detail.png)
+hex_match_short
+
+![hex_match_detail](figures/hex_match_detail.png)
 
 hex_match_detail
 
