@@ -30,8 +30,6 @@
   : Review-Fälle für die Shiny-Review-App vorbereiten
 - [`review_matches()`](https://github.com/Stifterverband/HEXmatchR/reference/review_matches.md)
   : Organisationsmatches in einer Shiny-App reviewen
-- [`run_matching_pipeline()`](https://github.com/Stifterverband/HEXmatchR/reference/run_matching_pipeline.md)
-  : Matching-Pipeline von Anfang bis Ende ausführen
 - [`run_matching_workflow()`](https://github.com/Stifterverband/HEXmatchR/reference/run_matching_workflow.md)
   : Matching, Review und Goldstandard-Evaluation in einem Aufruf
 - [`run_review_app()`](https://github.com/Stifterverband/HEXmatchR/reference/run_review_app.md)

@@ -622,13 +622,9 @@ Daneben gibt es weitere Funktionen:
 - [`generate_candidate_matches()`](https://github.com/Stifterverband/HEXmatchR/reference/generate_candidate_matches.md)
   ist ein Komfort-Wrapper fuer
   [`generate_embedding_candidates()`](https://github.com/Stifterverband/HEXmatchR/reference/generate_embedding_candidates.md).
-- [`run_matching_pipeline()`](https://github.com/Stifterverband/HEXmatchR/reference/run_matching_pipeline.md)
-  ist eine alternative Pipeline ohne interaktiven Review und ohne
-  Goldstandard-Vergleich.
 - [`finalise_matching()`](https://github.com/Stifterverband/HEXmatchR/reference/finalise_matching.md)
-  speichert Matching- und Review-Tabellen und wird von
-  [`run_matching_pipeline()`](https://github.com/Stifterverband/HEXmatchR/reference/run_matching_pipeline.md)
-  genutzt.
+  speichert Matching- und Review-Tabellen, wenn bestehende Organisationstabellen
+  separat abgeschlossen werden sollen.
 - [`import_matching_data()`](https://github.com/Stifterverband/HEXmatchR/reference/import_matching_data.md)
   spielt bereits gespeicherte Matching-Ergebnisse nachtraeglich in
   Kurs-Rohdaten ein.
